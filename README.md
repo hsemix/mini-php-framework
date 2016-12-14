@@ -95,7 +95,7 @@ class User extends Elegant{
 
 
 
-- how to use the model from with the controller
+- how to use the model from with in the controller
 
 ```php
 <?php
