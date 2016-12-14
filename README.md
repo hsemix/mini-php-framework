@@ -103,7 +103,7 @@ namespace MyApp;
 use DataFrame\Controllers\Controller;
 use DataFrame\Views\View;
 class HomeController extends Controller{
-	public function index(){
+	public function getUsers(){
 		$users = User::all();
 		$usersNumber = User::count();
 		$usersWhoseAgeIsMoreThanTen = User::where("age", ">", 10)->get; // it is optional to use get() or just get
