@@ -4,7 +4,7 @@ The DataFrame php Framework is a mini php framework to help in daily php problem
 
 Basic features found are:-
 - Basic Routing
-- MVC archtecture
+- MVC architecture
 - Use of namespaces
 - ORM support similar to that of the famous Laravel's Eloquent
 - A Basic php Template engine (purely php)
