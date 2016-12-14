@@ -77,3 +77,45 @@ class HomeController extends Controller{
 	}
 }
 ```
+
+
+
+
+- creation of a Model
+```php
+<?php 
+namespace MyApp;
+use DataFrame\Models\Elegant;
+class User extends Elegant{
+	protected static $table_name = "users_table"; // custome tablename, the framework assumes the plural version of the class name
+	
+}
+
+```
+
+
+
+- how to use the model from with the controller
+
+```php
+<?php
+namespace MyApp;
+use DataFrame\Controllers\Controller;
+use DataFrame\Views\View;
+class HomeController extends Controller{
+	public function index(){
+		$users = User::all();
+		$usersNumber = User::count();
+		$usersWhoseAgeIsMoreThanTen = User::where("age", ">", 10)->get; // it is optional to use get() or just get
+		// count these uses
+		$usersCount = User::where("age", ">", 10)->count;
+		$data = [
+			'allUsers' => $users,
+			'userCount' => $usersNumber,
+			'usersAges' => $usersWhoseAgeIsMoreThanTen,
+			'usersAgesCount' => $usersCount
+		];
+		return new View("home", $data);
+	}
+}
+```
