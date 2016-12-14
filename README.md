@@ -58,6 +58,22 @@ Route::get("/products", function(DataFrame\Response $res){
   
 });
 
+
+
 ```
+- creation of a Controller
 
-
+```php
+<?php
+namespace MyApp;
+use DataFrame\Controllers\Controller;
+use DataFrame\Views\View;
+class HomeController extends Controller{
+	public function index(){
+		$data = [
+			'name' => 'Hamidouh'
+		];
+		return new View("home", $data);
+	}
+}
+```
