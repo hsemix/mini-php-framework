@@ -10,7 +10,7 @@ Basic features found are:-
 - A Basic php Template engine (purely php)
 
 Quick Start up is below:
-
+```php
 <?php
 include_once("mahad/starter.php");
 
@@ -58,6 +58,6 @@ Route::get("/products", function(DataFrame\Response $res){
   
 });
 
-
+```
 
 
