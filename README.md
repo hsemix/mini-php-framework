@@ -119,3 +119,66 @@ class HomeController extends Controller{
 	}
 }
 ```
+
+- how to handle basic relations i.e (one-to-one, one-to-many, many-to-many, and polymorphic) 
+- This simple framework will help you as well with this hard task
+
+```php
+
+<?php
+namespance App;
+Use DataFrame\Models\Elegant;
+class User extends Elegant{
+	protected static $table_name = "users";
+	public function userType(){
+		return $this->hasOne("Type"); // you can change the relational foreign key but assumes it is user_id in types;
+	}
+	
+	public function photos(){
+		return $this->mergeableMany("Photograph", "imageable"); // polymophic
+	}
+	
+	public function products(){
+		return $this->hasMany("Product"); // one to many
+	}
+	public function groups(){
+		return $this->belongsToMany("Group"); // many to many ,assumes pivot table to be group_user
+	}
+}
+
+class Product extends Elegant{
+	public function user(){
+		return $this->belongsTo("User"); // reverse one to one
+	}
+	public function photos(){
+		return $this->mergeableMany("Photograph", "imageable"); // polymophic
+	}
+}
+
+class Group extends Elegant{
+	public function users(){
+		return $this->belongsToMany("User"); // many to many ,assumes pivot table to be group_user
+	}
+}
+
+class Photograph extends Elegant{
+	public function imageable(){
+		return $this->mergeable();
+	}
+}
+
+```
+- How to use these models
+```php
+<?php
+
+$user = User::find(1); // finds user whose primary key is 1
+$userPhotos = $user->photos; // returns an array of photos where imageable_id = 1 & imageable_type = 'user'
+
+// you can also trim result sets function using the query builder that comes with the Elegant Mode class
+
+$userPhotos = $user->photos()->where("created_at", "2000-12-20")->get;
+
+$userProducts = $user->products;
+
+```
