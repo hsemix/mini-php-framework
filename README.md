@@ -119,3 +119,93 @@ class HomeController extends Controller{
 	}
 }
 ```
+
+Let's make Some Relations in the DataModels
+- one-to-one, one-to-many, many-to-many, polymophic relations are the few that come with the framework
+
+```php
+<?php
+
+namespace App;
+use DataFrame\Models\Elegant;
+
+class User extends Elegant{
+	protected static $table_name = "user_table"; // optional assumed to be users if absent
+	public $created_at = true; // if you want the framework to manage your dates
+	public $updated_at = true;
+	public function userType(){
+		return $this->hasOne("Type");
+	}
+	public function posts(){
+		return $this->hasMany("Post");
+	}
+	
+	public function photos(){
+		return $this->mergeableMany("Photograph", "imageable");
+	}
+	
+	public function comments(){
+		return $this->hasMany("Comment");
+	}
+}
+
+```
+```php
+<?php
+namespace App;
+use DataFrame\Models\Elegant;
+// Post.php
+
+class Post extends Elegant{
+	// framework assumes the table to be the lowercase plural form of the class name
+	protected $primaryKey = "postId";
+	public function user(){
+		return $this->belongsTo("User");
+	}
+	public function comments(){
+		// assumes foreign key to be post_id, so you can define yours i.e postId
+		return $this->hasMany("Comment", "postId");
+	}
+	public function likes(){
+		return $this->mergeableMany("Like", "likeable");
+	}
+}
+
+```
+```php
+<?php
+
+namespace App;
+use DataFrame\Models\Elegant;
+// Comment.php
+
+class Comment extends Elegant{
+	protected static $table_name = "comment";
+	public function post(){
+		return $this->belongsTo("Post");
+	}
+	
+	public function user(){
+		return $this->belongsTo("User");
+	}
+	
+	public function likes(){
+		return $this->mergeableMany("Like", "likeable");
+	}
+}
+
+
+```
+
+```php
+<?php
+
+namespace App;
+use DataFrame\Models\Elegant;
+// Like.php
+
+class Like extends Elegant{
+	public function likeable(){ // this will return the appropriate object that was liked
+		return $this->mergeable(); // 
+	}
+}
