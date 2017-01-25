@@ -209,3 +209,28 @@ class Like extends Elegant{
 		return $this->mergeable(); // 
 	}
 }
+
+
+
+``hax
+// main.hax.php
+
+<html>
+<title>Hello</title>
+<body>
+@yield('main_content')
+
+</body>
+
+
+
+// home.hax.php
+
+
+@extends('main')
+
+@section("main_content")
+<div>
+	Hello World
+</div>
+@endsection
