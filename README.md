@@ -7,7 +7,8 @@ Basic features found are:-
 - MVC archtecture
 - Use of namespaces
 - ORM support similar to that of the famous Laravel's Eloquent
-- A Basic php Template engine (purely php)
+- A Basic php Template engine (I called it hax templating engine)
+- Blade like templating inheritance
 
 Quick Start up is below:
 ```php
