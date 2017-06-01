@@ -43,6 +43,7 @@ Start::init(function($args){
 		]
 	]);
 });
+```
 // Index in the App dir has the following cond
 
 ```php
@@ -123,7 +124,7 @@ Route::post("/login", function(Request $request, Response $response, Session $se
 	}
 	//$response->json(['responseText' => $request->get('password')]);
 });
-
+```
 
 
 - creation of a Controller
