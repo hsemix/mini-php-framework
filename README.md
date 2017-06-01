@@ -30,7 +30,7 @@ Start::init(function($args){
 		'dbtype' => 'mysql', 
 		"dbuser"=>"root", 
 		"dbhost"=>"localhost", 
-		"dbname"=>"musawo", 
+		"dbname"=>"your_data_base", 
 		"dbpass"=>"",
 		"dbprefix" => ''
 	]);
