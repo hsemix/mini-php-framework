@@ -18,6 +18,9 @@ Basic features found are:-
 - The controllers now have Constructor dependency injections and method dependency injections
 - The Response Class has also been improved to support json
 - The Models can now be converted to arrays, json and can be converted to plain strings
+- Unlike eloquent models, the Elegant models can get there results from a view not only tables are supported here but also views
+- Events have been added so you can keep track of what is happening in your application as things happen
+
 
 Quick Start up is below:
 ```php
@@ -271,9 +274,23 @@ class Like extends Elegant{
 	}
 }
 
+```
+- How to use the table views in a model
+```php
+<?php
 
+namespace App;
+use DataFrame\Controllers\Controller;
+class UserController extends Controller{
+	public function getUsers(User $user){
+		$users = $user->getFromView()->all();
+		
+		print_r($users);
+	}
+}
+```
 
-``hax
+```hax
 // main.hax.php
 
 <html>
