@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Soft Pack Icon</title>
+    <link href="css/metro.css" rel="stylesheet">
+    <link href="css/metro-icons.css" rel="stylesheet">
+    <link href="css/metro-responsive.css" rel="stylesheet">
+    <link href="css/metro-schemes.css" rel="stylesheet">
+    <link href="css/super.css" rel="stylesheet">
+    <script src="js/jquery-2.1.3.min.js"></script>
+    <script src="js/jquery.dataTables.min.js"></script>
+    <script src="js/metro.js"></script>
+    <script>
+            var nw = require("nw.gui");
+            var win = nw.Window.get();
+            win.isMaximized = false;
+    </script>
+    <style type="text/css">
+        #windowCaption{
+            -webkit-app-region: drag;
+            -webkit-user-select: none;
+        }
+        #windowControlMinimize{
+            -webkit-app-region: no-drag;
+        }
+        #windowControlClose{
+            -webkit-app-region: no-drag;
+        }
+        #windowControlMaximize{
+            -webkit-app-region: no-drag;
+        }
+    </style>
+</head>
+<body class="bg-darkTeal window warning">
+	<div class="window-caption" id="windowCaption" style="position:fixed;margin-top:-20px;z-index:9;width:100%;">
+        <span class="window-caption-icon"><span class="mif-windows"></span></span>
+        <span class="window-caption-title">SOFT SALE VERSION 2.0.0 BETA</span>
+        <span class="btn-min" id="windowControlMinimize"></span>
+        <span class="btn-max" id="windowControlMaximize"></span>
+        <span class="btn-close" id="windowControlClose"></span>
+    </div>
+    <div class="panel margin20">
+        <div class="heading">
+            <span class="title">Soft Sale Starting</span>
+        </div>
+        <div class="content">
+        	<div class="margin10">
+            
+            <button class="button loading-cube lighten danger">Soft Sale is starting but taking longer than usual. Please click the button below to fasten the process...</button>
+            </div>
+            
+            <div class="margin10">
+                
+                <button class="button loading-pulse lighten primary" onClick="javascript:window.location='index.php'">Click Here to make it Fast</button>
+                
+                
+            
+            </div>
+        </div>
+    </div>
+    <script>
+	   win.unmaximize();
+    document.getElementById("windowControlMinimize").onclick = function(){
+        win.minimize();
+    };
+
+    document.getElementById("windowControlClose").onclick = function(){
+        win.close();
+    };
+
+     document.getElementById("windowControlMaximize").onclick = function(){
+         if(win.isMaximized){
+             win.unmaximize();
+			 win.isMaximized = false;
+         }else{
+             win.maximize();
+			 win.isMaximized = true;
+         }
+    };
+    win.on('maximize', function(){
+        win.isMaximized = true;
+    });
+    win.on('unmaximize', function(){
+        win.isMaximized = false;
+    });
+</script>
+</body>
+</html>

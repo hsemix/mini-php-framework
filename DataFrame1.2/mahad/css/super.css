@@ -1,0 +1,108 @@
+.hide{
+	display:none;
+}
+
+.show-hide{
+	display:none;
+}
+
+.headerContainer{
+	position:relative;
+	border:1px solid #999999;
+	padding-top:37px;
+	/*background:#000;*/
+}
+.tableContainer{
+	overflow-y:auto;
+	height:200px;
+	background:#fff;
+}
+.tableContainer table{
+	border-spacing:0;
+	width:100%;
+}
+
+/*.tableContainer td + td{
+	border-bottom:1px solid #eee;
+}*/
+
+.tableContainer thead{
+	border:none;
+}
+
+.tableContainer td, th{
+	border-bottom:1px solid #eee;
+	padding:10px;
+}
+
+.tableContainer th{
+	height:0px;
+	padding-top:0;
+	padding-bottom:0;
+	line-height:0;
+	visibility:hidden;
+	white-space:nowrap;
+}
+
+.tableContainer th div{
+	visibility:visible;
+	position:absolute;
+	/*background:#000;*/
+	color:#fff;
+	padding:9px 10px;
+	top:0;
+	margin-left:-10px;
+	line-height:normal;
+	/*border-left:1px solid #222;*/
+}
+
+/*th:first-child div{
+	border:none;
+}*/
+
+/*.tableContainer tbody tr:nth-child(even){
+	background:#ddd;
+}*/
+
+.totals{
+	margin-top:-28px;
+}
+.totals table{
+	border-bottom:1px solid #999999;
+}
+.totals table tfoot{
+	border:none;
+}
+
+.calculator{
+	margin-top:-20px;
+}
+
+#app-ribbon{
+	margin-top:70px;
+}
+
+#category-list,#organise{
+	/*height:607px;*/
+	max-height:607px;
+	overflow-y:auto;
+}
+
+
+@media print{
+	a {
+		display:none;
+	}
+}
+
+@media screen and projection{
+	a {
+		display:none;
+	}
+}
+
+@page {
+	size:auto; 
+	margin-bottom:5mm;
+}
+
