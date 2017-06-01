@@ -3,62 +3,126 @@
 The DataFrame php Framework is a mini php framework to help in daily php problems while development is taking place.
 
 Basic features found are:-
-- Basic Routing
+- Basic Routing with some advanced routing features e.g. post, get, put, delete and resource for api
 - MVC archtecture
 - Use of namespaces
-- ORM support similar to that of the famous Laravel's Eloquent
+- ORM support similar to that of the famous Laravel's Eloquent. This has been rewritten from scratch to support more features
+(i.e it nolonger returns an array for models but returns the collection object that supports things like filtering, counting results, chunking results and many more.)
 - A Basic php Template engine (I called it hax templating engine)
 - Blade like templating inheritance
+- The validate class has been added,
+- The Token class has been added to solve csrf problems
+- The Session object has been improved and 
+- Cookie class has been added to support for remember me features on forms
+- The request class has been improved to support file uploads and
+- The controllers now have Constructor dependency injections and method dependency injections
+- The Response Class has also been improved to support json
+- The Models can now be converted to arrays, json and can be converted to plain strings
 
 Quick Start up is below:
 ```php
 <?php
-include_once("mahad/starter.php");
+use DataFrame\Starter as Start;
+include_once("mahad/autoloader.php");
 
-use DataFrame\Starter as start;
+Start::init(function($args){
+	$args->setDbConnect([
+		'dbtype' => 'mysql', 
+		"dbuser"=>"root", 
+		"dbhost"=>"localhost", 
+		"dbname"=>"musawo", 
+		"dbpass"=>"",
+		"dbprefix" => ''
+	]);
+	$args->setGlobals([
+		'session' => [
+			'session_name' => 'user'
+		],
+		'token' => [
+			'token_name' => 'token'
+		]
+	]);
+});
+// Index in the App dir has the following cond
+
+```php
+<?php
+use App\User;
 use DataFrame\Route;
-use DataFrame\Views\View;
-start::init(function($args){
-	$args->setModelDir("models");  // Could also be MyApp/models if you app is in a subfolder
-	$args->setDbConnect(
-		array('dbtype' => 'mysql', 
-			"dbuser"=>"root", 
-			"dbserver"=>"localhost", 
-			"dbname"=>"your_database", 
-			"dbpass"=>""
-		)
-	);
-	$args->setTemplate(true,
-		array(
-			"tempDir" => "views"  // Could also be MyApp/view
-		)
-	);
-	$args->setControllerDir("controllers"); // Could also be MyApp/controller
+use DataFrame\Token;
+use DataFrame\Session;
+use DataFrame\Request;
+use DataFrame\Response;
+use DataFrame\validate;
+include_once("header.php");
+
+Route::get("/", function(){
+	return view("register");
 });
 
-Route::get("/home",function(){
-	return new View("test");
+Route::get("/login", function(){
+	return view("login");
 });
 
-$users = ['semix', 'hamidouh', 'Al fayeed'];
-
-Route::get("/users", function() use ($users){
-  print_r($users);
+Route::get("/reset", function(){
+	return view("resetpassword");
 });
 
+Route::post("/login", function(Request $request, Response $response, Session $session, User $user, Token $token, Validate $validate){
+	if($request->exists()){
+		if($token->check($request->get(getGlobals('token.token_name')))){
+			$validation = $validate->check($_POST, [
+				'username|Email or Username' => [
+					'required' => true,
 
-// Controller Based
+				],
+				'password|Password' => [
+					'required' => true
+				]
+			]);
 
-Route::get("/users", "YourNameSpace\MembersController@getUsers");
-
-// Get Info From DB
-Route::get("/products", function(DataFrame\Response $res){
-  $products = YourNameSpace\Product::findAll()->get;
-  
-  print_r($products);
-  
+			if($validation->passed()){
+				$username = $request->get('username');
+				$password = $request->get('password');
+				if($user->where('username', $username)->orWhere('email', $username)->first()){
+					$login = $user->where('username', $username)->orWhere('email', $username)->first();
+					if($login->password == $password){
+						if($login->type_id == 3){
+							$session->login($login);
+							$response->json(['redirect_url' => '/dashboard'], 200);
+						}else{
+							$msgs = [
+			                	'errors' => 'Sorry You need to be an admin',
+			                    'token' => csrf_token()
+			               	];
+			            	$response->json(['responseText' => $msgs], 1000);
+						}
+						
+					}else{
+						$msgs = [
+		                	'errors' => 'Wrong Username/Email and Password combination',
+		                    'token' => csrf_token()
+		               	];
+		            	$response->json(['responseText' => $msgs], 1000);
+					}
+				}else{
+					$msgs = [
+	                	'errors' => 'Unknown Username or Email',
+	                    'token' => csrf_token()
+	               	];
+	            	$response->json(['responseText' => $msgs], 1000);
+				}
+			}else{
+				$msgs = [
+                	'errors' => implode("<br />",$validation->errors()),
+                    'token' => csrf_token()
+               	];
+            	$response->json(['responseText' => $msgs], 1000);
+			}
+		}
+	}
+	//$response->json(['responseText' => $request->get('password')]);
 });
-
 
 
 ```
@@ -66,15 +130,14 @@ Route::get("/products", function(DataFrame\Response $res){
 
 ```php
 <?php
-namespace MyApp;
+namespace App;
 use DataFrame\Controllers\Controller;
-use DataFrame\Views\View;
 class HomeController extends Controller{
 	public function index(){
 		$data = [
 			'name' => 'Hamidouh'
 		];
-		return new View("home", $data);
+		return view("home", $data);
 	}
 }
 ```
@@ -102,21 +165,17 @@ class User extends Elegant{
 <?php
 namespace MyApp;
 use DataFrame\Controllers\Controller;
-use DataFrame\Views\View;
 class HomeController extends Controller{
-	public function getUsers(){
-		$users = User::all();
-		$usersNumber = User::count();
-		$usersWhoseAgeIsMoreThanTen = User::where("age", ">", 10)->get; // it is optional to use get() or just get
-		// count these uses
-		$usersCount = User::where("age", ">", 10)->count;
-		$data = [
-			'allUsers' => $users,
-			'userCount' => $usersNumber,
-			'usersAges' => $usersWhoseAgeIsMoreThanTen,
-			'usersAgesCount' => $usersCount
-		];
-		return new View("home", $data);
+	private $user;
+	private $post;
+	public function __construct(User $user, Post $post){
+		parent::__construct();
+		$this->user = $user;
+		$this->post = $post;
+	}
+	public function userInfo(Request $request, $userId){
+		// a new Request object is return and the variable in the url for $userId is also return in this case
+		echo $userId;
 	}
 }
 ```
@@ -160,7 +219,7 @@ use DataFrame\Models\Elegant;
 class Post extends Elegant{
 	// framework assumes the table to be the lowercase plural form of the class name
 	protected $primaryKey = "postId";
-	public function user(){
+	public function user(){ // takes it the the foreign key is the function name underscore id (user_id)
 		return $this->belongsTo("User");
 	}
 	public function comments(){
